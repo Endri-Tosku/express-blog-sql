@@ -87,30 +87,13 @@ function update(req, res) {
 // DESTROY
 function destroy(req, res) {
 
-    // recuperiamo l'id dall' URL e trasformiamolo in numero
-    const id = parseInt(req.params.id)
-
-    // cerchiamo il post tramite id
-    const post = dataPost.find(post => post.id === id);
-
-    // piccolo controllo
-    if (!post) {
-        res.status(404);
-
-        return res.json({
-            status: 404,
-            error: "Not Found",
-            message: "post non trovata"
-        })
-    }
-
-    // rimozione tramite indexOf
-    dataPost.splice(dataPost.indexOf(post), 1);
-
-    console.log(dataPost);
-
-    // forziamo status secondo convenzioni REST che chiude anche function
-    res.sendStatus(204)
+    // recuperiamo l'id dall' URL
+    const { id } = req.params;
+    //Eliminiamo il post dal menu
+    connection.query('DELETE FROM posts WHERE id = ?', [id], (err) => {
+        if (err) return res.status(500).json({ error: 'Failed to delete post' });
+        res.sendStatus(204)
+    });
 }
 
 // esportiamo tutte le funzioni
