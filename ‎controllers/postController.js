@@ -16,25 +16,15 @@ function index(req, res) {
 // SHOW
 function show(req, res) {
     // recuperiamo l'id dall'URL e lo convertiamo in numero
-    const idNum = parseInt(req.params.id);
+    const id = parseInt(req.params.id);
 
-    throw new Error("Errore di test middleware");
+    const sql = `SELECT * FROM posts WHERE id = ?`;
+    connection.query(sql, [id], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query failed' });
+        if (results.length === 0) return res.status(404).json({ error: 'Post not found' });
+        res.json(results[0])
+    });
 
-
-    const post = dataPost.find(post => post.id === idNum);
-
-    // controllo se il post esiste
-    if (!post) {
-
-        return res.status(404).json({
-            status: 404,
-            error: "Not Found",
-            message: "Post non trovato"
-        });
-    }
-
-    // restituiamo il post trovato
-    res.json(post);
 }
 
 // STORE
