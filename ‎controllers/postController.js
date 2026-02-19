@@ -4,7 +4,13 @@ const dataPost = require('./../data/posts')
 
 // INDEX
 function index(req, res) {
-    res.json(dataPost);
+    // prepariamo la query
+    const sql = 'SELECT * FROM posts';
+    // eseguiamo la query!
+    connection.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query failed' });
+        res.json(results);
+    })
 }
 
 // SHOW
